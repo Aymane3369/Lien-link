@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BET Structure · Scannez</title>
+    <!-- Police élégante -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            background: #0b0e1a;
+            padding: 20px;
+        }
+
+        /* Fond animé en dégradé */
+        .bg-animated {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Carte principale (glassmorphisme) */
+        .card {
+            position: relative;
+            z-index: 1;
+            max-width: 520px;
+            width: 100%;
+            padding: 48px 40px 40px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.01);
+        }
+
+        /* Badge "scannez" */
+        .badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.15);
+            backdrop-filter: blur(4px);
+            padding: 8px 22px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #f5d742;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.65);
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        .subtitle strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Conteneur du QR */
+        .qr-wrapper {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 28px;
+            padding: 20px;
+            display: inline-block;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .qr-wrapper:hover {
+            box-shadow: 0 20px 60px rgba(100, 80, 255, 0.35);
+        }
+
+        .qr-wrapper img {
+            display: block;
+            width: 200px;
+            height: 200px;
+            border-radius: 16px;
+        }
+
+        /* Bouton CTA */
+        .btn-scan {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 14px 34px;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 24px rgba(108, 92, 231, 0.35);
+            margin-top: 6px;
+        }
+
+        .btn-scan:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(108, 92, 231, 0.55);
+            background: linear-gradient(135deg, #5a4bd1, #8f84f5);
+        }
+
+        .btn-scan:active {
+            transform: scale(0.97);
+        }
+
+        /* Lien direct sous le bouton */
+        .direct-link {
+            display: block;
+            margin-top: 18px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            transition: color 0.2s;
+            word-break: break-all;
+        }
+
+        .direct-link:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Petit footer */
+        .footer-note {
+            margin-top: 28px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .card {
+                padding: 32px 20px 28px;
+            }
+            h1 {
+                font-size: 1.4rem;
+            }
+            .qr-wrapper img {
+                width: 160px;
+                height: 160px;
+            }
+            .btn-scan {
+                font-size: 0.9rem;
+                padding: 12px 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animated"></div>
+
+    <div class="card">
+        <!-- Badge -->
+        <div class="badge">📸 Scannez & découvrez</div>
+
+        <!-- Titre -->
+        <h1>BET Structure</h1>
+        <p class="subtitle">
+            Ingénierie civile d'excellence  <strong></strong>
+        </p>
+
+        <!-- QR Code (généré dynamiquement vers votre site) -->
+        <div class="qr-wrapper">
+            <img
+            src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://ingenierie-travaux.vercel.app/&bgcolor=ffffff&color=1a1a2e&margin=20"
+            alt="QR Code vers BET Structure"
+            width="200"
+            height="200"
+            />
+        </div>
+
+        <!-- Bouton d'action -->
+        <a href="https://ingenierie-travaux.vercel.app/" target="_blank" class="btn-scan">
+            <span>🚀</span> Accéder au site
+        </a>
+
+        <!-- Lien direct (pour les curieux) -->
+        <a href="https://ingenierie-travaux.vercel.app/" target="_blank" class="direct-link">
+            https://ingenierie-travaux.vercel.app/
+        </a>
+
+        <div class="footer-note">——  ■ingenierie&travaux▪︎Style Shop——</div>
+    </div>
+
+</body>
+</html>
