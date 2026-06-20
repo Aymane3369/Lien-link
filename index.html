@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BET Structure · Scannez</title>
-    <!-- Police élégante -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet" />
@@ -23,9 +22,10 @@
             font-family: 'Inter', sans-serif;
             background: #0b0e1a;
             padding: 20px;
+            overflow: hidden;
         }
 
-        /* Fond animé en dégradé */
+        /* --- FOND ANIMÉ (dégradé) --- */
         .bg-animated {
             position: fixed;
             inset: 0;
@@ -41,7 +41,27 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Carte principale (glassmorphisme) */
+        /* --- PARTICULES FLOTTANTES (étoiles) --- */
+        .particle {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(2px);
+            z-index: 0;
+            animation: floatParticle 8s infinite ease-in-out alternate;
+            pointer-events: none;
+        }
+        .p1 { width: 120px; height: 120px; top: 10%; left: 5%; animation-duration: 10s; }
+        .p2 { width: 80px; height: 80px; bottom: 15%; right: 5%; animation-duration: 14s; background: rgba(108, 92, 231, 0.15); }
+        .p3 { width: 200px; height: 200px; top: 60%; left: 80%; animation-duration: 18s; background: rgba(162, 155, 254, 0.08); }
+        .p4 { width: 60px; height: 60px; top: 20%; right: 20%; animation-duration: 12s; background: rgba(255, 215, 0, 0.08); }
+
+        @keyframes floatParticle {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            100% { transform: translate(-40px, -60px) scale(1.4); opacity: 0.8; }
+        }
+
+        /* --- CARTE PRINCIPALE (entrée + lévitation) --- */
         .card {
             position: relative;
             z-index: 1;
@@ -55,14 +75,24 @@
             border: 1px solid rgba(255, 255, 255, 0.12);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
             text-align: center;
-            transition: transform 0.3s ease;
+            
+            /* Animations combinées */
+            opacity: 0;
+            animation: fadeInUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+                       levitate 5s ease-in-out 0.9s infinite;
         }
 
-        .card:hover {
-            transform: scale(1.01);
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(50px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Badge "scannez" */
+        @keyframes levitate {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+
+        /* --- BADGE --- */
         .badge {
             display: inline-block;
             background: rgba(255, 215, 0, 0.15);
@@ -99,19 +129,23 @@
             font-weight: 600;
         }
 
-        /* Conteneur du QR */
+        /* --- CONTENEUR QR (avec pulsation) --- */
         .qr-wrapper {
+            position: relative;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 28px;
             padding: 20px;
             display: inline-block;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
             margin-bottom: 20px;
-            transition: box-shadow 0.3s ease;
+            overflow: hidden; /* cache la ligne de scan qui dépasse */
+            
+            animation: pulseGlow 3s ease-in-out infinite;
         }
 
-        .qr-wrapper:hover {
-            box-shadow: 0 20px 60px rgba(100, 80, 255, 0.35);
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0px rgba(108, 92, 231, 0); }
+            50% { box-shadow: 0 12px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(108, 92, 231, 0.4); }
         }
 
         .qr-wrapper img {
@@ -119,14 +153,39 @@
             width: 200px;
             height: 200px;
             border-radius: 16px;
+            position: relative;
+            z-index: 2;
         }
 
-        /* Bouton CTA */
+        /* --- LIGNE DE SCAN ANIMÉE (sur le QR) --- */
+        .scan-line {
+            position: absolute;
+            left: 10%;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #6c5ce7, #a29bfe, transparent);
+            border-radius: 50%;
+            filter: blur(3px);
+            opacity: 0.8;
+            z-index: 3;
+            box-shadow: 0 0 20px #6c5ce7;
+            
+            animation: scanMove 2.8s ease-in-out infinite;
+        }
+
+        @keyframes scanMove {
+            0% { top: -10%; }
+            50% { top: 100%; }
+            100% { top: 110%; }
+        }
+
+        /* --- BOUTON CTA (avec brillance et rebond) --- */
         .btn-scan {
             display: inline-flex;
             align-items: center;
             gap: 10px;
             background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            background-size: 200% 200%;
             color: #fff;
             font-weight: 600;
             font-size: 1rem;
@@ -135,22 +194,37 @@
             border-radius: 60px;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.25s ease;
             box-shadow: 0 6px 24px rgba(108, 92, 231, 0.35);
             margin-top: 6px;
+            transition: all 0.3s ease;
+            
+            animation: shimmer 3s ease-in-out infinite, bounceSoft 2s ease-in-out 1s infinite;
+        }
+
+        /* Effet de brillance (shimmer) */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Petit rebond */
+        @keyframes bounceSoft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
         }
 
         .btn-scan:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(108, 92, 231, 0.55);
+            transform: translateY(-3px) scale(1.04) !important;
+            box-shadow: 0 12px 40px rgba(108, 92, 231, 0.65);
+            animation-play-state: paused; /* Stopper les anims au survol pour éviter les conflits */
             background: linear-gradient(135deg, #5a4bd1, #8f84f5);
         }
 
         .btn-scan:active {
-            transform: scale(0.97);
+            transform: scale(0.97) !important;
         }
 
-        /* Lien direct sous le bouton */
+        /* --- LIEN DIRECT --- */
         .direct-link {
             display: block;
             margin-top: 18px;
@@ -165,7 +239,6 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        /* Petit footer */
         .footer-note {
             margin-top: 28px;
             font-size: 0.7rem;
@@ -173,10 +246,12 @@
             letter-spacing: 0.5px;
         }
 
-        /* Responsive */
+        /* --- RESPONSIVE --- */
         @media (max-width: 480px) {
             .card {
                 padding: 32px 20px 28px;
+                animation: fadeInUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+                           levitate 4s ease-in-out 0.9s infinite;
             }
             h1 {
                 font-size: 1.4rem;
@@ -189,44 +264,51 @@
                 font-size: 0.9rem;
                 padding: 12px 28px;
             }
+            .p1, .p2, .p3, .p4 { display: none; } /* cache les particules sur mobile pour rester léger */
         }
     </style>
 </head>
 <body>
 
+    <!-- Fond animé -->
     <div class="bg-animated"></div>
 
+    <!-- Particules de fond -->
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+
+    <!-- Carte -->
     <div class="card">
-        <!-- Badge -->
         <div class="badge">📸 Scannez & découvrez</div>
 
-        <!-- Titre -->
         <h1>BET Structure</h1>
         <p class="subtitle">
-            Ingénierie civile d'excellence  <strong></strong>
+            Ingénierie civile d'excellence · <strong></strong>
         </p>
 
-        <!-- QR Code (généré dynamiquement vers votre site) -->
+        <!-- QR Code avec ligne de scan -->
         <div class="qr-wrapper">
+            <div class="scan-line"></div> <!-- L'effet "scanneur" -->
             <img
-            src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://ingenierie-travaux.vercel.app/&bgcolor=ffffff&color=1a1a2e&margin=20"
-            alt="QR Code vers BET Structure"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://lien-link.vercel.app/&bgcolor=ffffff&color=1a1a2e&margin=20"
+            alt="QR Code"
             width="200"
             height="200"
             />
         </div>
 
-        <!-- Bouton d'action -->
-        <a href="https://ingenierie-travaux.vercel.app/" target="_blank" class="btn-scan">
+        <!-- Bouton -->
+        <a href="https://lien-link.vercel.app/" target="_blank" class="btn-scan">
             <span>🚀</span> Accéder au site
         </a>
 
-        <!-- Lien direct (pour les curieux) -->
-        <a href="https://ingenierie-travaux.vercel.app/" target="_blank" class="direct-link">
-            https://ingenierie-travaux.vercel.app/
+        <a href="https://lien-link.vercel.app/" target="_blank" class="direct-link">
+            https://lien-link.vercel.app/
         </a>
 
-        <div class="footer-note">——  ■ingenierie&travaux▪︎Style Shop——</div>
+        <div class="footer-note">——  ■ingenierie&travaux ▪︎ StyleShop   ——</div>
     </div>
 
 </body>
